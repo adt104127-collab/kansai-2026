@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>關西之旅 2026</title>
+<style>
+  :root {
+    --sakura: #f9c8d0;
+    --sakura-deep: #e8a0b0;
+    --sakura-light: #fef0f3;
+    --matcha: #8fad88;
+    --matcha-light: #e8f0e6;
+    --sky: #c5dff5;
+    --sky-light: #eef6fd;
+    --cream: #fdf8f4;
+    --warm-gray: #8a7f7a;
+    --text: #3a3530;
+    --text-light: #7a6f6a;
+    --border: #ecddd8;
+    --white: #ffffff;
+    --orange: #e8a87c;
+    --orange-light: #fdf0e8;
+    --purple: #b09bc4;
+    --purple-light: #f3eef8;
+    --yellow: #f0d080;
+    --yellow-light: #fdf7e4;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Hiragino Mincho ProN', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'YuGothic', 'Noto Serif TC', serif;
+    background: var(--cream);
+    color: var(--text);
+    min-height: 100vh;
+    padding-bottom: 80px;
+    font-size: 14px;
+  }
+
+  .app-header {
+    background: linear-gradient(135deg, #fce8ed 0%, #fdf5f8 40%, #edf5fb 100%);
+    padding: 24px 20px 16px;
+    border-bottom: 1px solid var(--border);
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .app-header .jp-label {
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: var(--warm-gray);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .app-header h1 { font-size: 22px; font-weight: 700; color: var(--text); letter-spacing: 2px; }
+  .app-header .subtitle { font-size: 11px; color: var(--text-light); margin-top: 4px; letter-spacing: 1px; }
+  .sakura-deco { display: flex; justify-content: center; gap: 6px; margin-top: 8px; font-size: 14px; opacity: 0.7; }
+
+  .bottom-nav {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: var(--white);
+    border-top: 1px solid var(--border);
+    display: flex;
+    z-index: 200;
+    box-shadow: 0 -2px 12px rgba(0,0,0,0.06);
+  }
+  .nav-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 2px 6px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--warm-gray);
+    font-size: 9px;
+    letter-spacing: 0.5px;
+    gap: 3px;
+    transition: color 0.2s;
+    font-family: inherit;
+  }
+  .nav-btn .nav-icon { font-size: 18px; line-height: 1; }
+  .nav-btn.active { color: var(--sakura-deep); }
+  .nav-btn.active .nav-icon { filter: drop-shadow(0 0 4px rgba(232,160,176,0.5)); }
+
+  .section { display: none; padding: 16px; animation: fadeIn 0.3s ease; }
+  .section.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+  .overview-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+  .day-card {
+    background: var(--white);
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    padding: 14px 12px;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    position: relative;
+    overflow: hidden;
+  }
+  .day-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 100%;
+    border-radius: 14px 0 0 14px;
+  }
+  .day-card:nth-child(1)::before { background: var(--sakura-deep); }
+  .day-card:nth-child(2)::before { background: var(--matcha); }
+  .day-card:nth-child(3)::before { background: var(--sky); }
+  .day-card:nth-child(4)::before { background: var(--orange); }
+  .day-card:nth-child(5)::before { background: var(--purple); }
+  .day-card:nth-child(6)::before { background: var(--yellow); }
+  .day-card:active { transform: scale(0.97); }
+  .day-label { font-size: 10px; font-weight: 700; letter-spacing: 1px; color: var(--warm-gray); margin-bottom: 4px; }
+  .day-date { font-size: 12px; color: var(--text-light); margin-bottom: 6px; }
+  .day-theme { font-size: 13px; font-weight: 700; color: var(--text); line-height: 1.3; margin-bottom: 6px; }
+  .day-highlights { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+  .highlight-tag { font-size: 9px; background: var(--sakura-light); color: var(--sakura-deep); border-radius: 20px; padding: 2px 7px; white-space: nowrap; }
+  .day-card:nth-child(2) .highlight-tag { background: var(--matcha-light); color: #5a8a54; }
+  .day-card:nth-child(3) .highlight-tag { background: var(--sky-light); color: #4a7aaa; }
+  .day-card:nth-child(4) .highlight-tag { background: var(--orange-light); color: #c07030; }
+  .day-card:nth-child(5) .highlight-tag { background: var(--purple-light); color: #7a5a9a; }
+  .day-card:nth-child(6) .highlight-tag { background: var(--yellow-light); color: #a08020; }
+
+  .section-title {
+    font-size: 13px; font-weight: 700; letter-spacing: 2px; color: var(--text-light);
+    text-transform: uppercase; margin: 16px 0 10px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  .stay-card {
+    background: var(--white); border-radius: 12px; border: 1px solid var(--border);
+    padding: 12px 14px; margin-bottom: 8px; display: flex; align-items: center; gap: 12px;
+  }
+  .stay-icon { font-size: 22px; }
+  .stay-info .stay-name { font-size: 13px; font-weight: 700; color: var(--text); }
+  .stay-info .stay-dates { font-size: 11px; color: var(--text-light); margin-top: 2px; }
+
+  .day-selector {
+    display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px;
+    margin-bottom: 14px; scrollbar-width: none;
+  }
+  .day-selector::-webkit-scrollbar { display: none; }
+  .day-tab {
+    flex-shrink: 0; background: var(--white); border: 1.5px solid var(--border);
+    border-radius: 20px; padding: 6px 14px; font-size: 11px; font-weight: 700;
+    color: var(--warm-gray); cursor: pointer; transition: all 0.2s;
+    white-space: nowrap; font-family: inherit;
+  }
+  .day-tab.active { background: var(--sakura-deep); border-color: var(--sakura-deep); color: var(--white); }
+
+  .timeline { position: relative; padding-left: 20px; }
+  .timeline::before {
+    content: ''; position: absolute; left: 6px; top: 0; bottom: 0;
+    width: 1.5px; background: linear-gradient(to bottom, var(--sakura), var(--border)); border-radius: 2px;
+  }
+  .timeline-item {
+    position: relative; margin-bottom: 12px; background: var(--white);
+    border-radius: 12px; border: 1px solid var(--border);
+    padding: 12px 12px 12px 14px; box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+  }
+  .timeline-item::before {
+    content: ''; position: absolute; left: -17px; top: 16px;
+    width: 8px; height: 8px; border-radius: 50%;
+    border: 2px solid var(--white); box-shadow: 0 0 0 1.5px var(--sakura-deep);
+  }
+  .timeline-item.type-交通::before { box-shadow: 0 0 0 1.5px var(--sky); }
+  .timeline-item.type-食物::before, .timeline-item.type-餐飲::before { box-shadow: 0 0 0 1.5px var(--orange); }
+  .timeline-item.type-景點::before { box-shadow: 0 0 0 1.5px var(--matcha); }
+  .timeline-item.type-住宿::before { box-shadow: 0 0 0 1.5px var(--purple); }
+  .timeline-item.type-購物::before { box-shadow: 0 0 0 1.5px var(--yellow); }
+
+  .item-header { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 4px; }
+  .item-time { font-size: 11px; color: var(--text-light); min-width: 55px; font-weight: 600; flex-shrink: 0; }
+  .item-name { font-size: 13px; font-weight: 700; color: var(--text); flex: 1; line-height: 1.3; }
+  .type-badge { font-size: 9px; padding: 2px 7px; border-radius: 20px; flex-shrink: 0; font-weight: 600; }
+  .badge-交通 { background: var(--sky-light); color: #4a7aaa; }
+  .badge-食物, .badge-餐飲 { background: var(--orange-light); color: #c07030; }
+  .badge-景點 { background: var(--matcha-light); color: #5a8a54; }
+  .badge-住宿 { background: var(--purple-light); color: #7a5a9a; }
+  .badge-購物 { background: var(--yellow-light); color: #a08020; }
+
+  .item-note { font-size: 11px; color: var(--text-light); line-height: 1.5; margin-top: 4px; white-space: pre-wrap; }
+  .map-btn {
+    display: inline-flex; align-items: center; gap: 5px; margin-top: 8px;
+    background: var(--sakura-deep); color: white; border: none; border-radius: 20px;
+    padding: 6px 12px; font-size: 11px; font-weight: 600; cursor: pointer;
+    text-decoration: none; box-shadow: 0 2px 6px rgba(66,133,244,0.25);
+    transition: transform 0.15s; font-family: inherit;
+  }
+  .map-btn:active { transform: scale(0.95); }
+
+  .map-section-title { font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .map-subtitle { font-size: 12px; color: var(--text-light); margin-bottom: 16px; }
+  .map-day-group { margin-bottom: 20px; }
+  .map-day-header {
+    font-size: 12px; font-weight: 700; color: var(--white);
+    padding: 6px 14px; border-radius: 20px;
+    display: inline-flex; align-items: center; gap: 6px; margin-bottom: 10px;
+  }
+  .map-day-header.d1 { background: var(--sakura-deep); }
+  .map-day-header.d2 { background: var(--matcha); }
+  .map-day-header.d3 { background: #6ab0d8; }
+  .map-day-header.d4 { background: var(--orange); }
+  .map-day-header.d5 { background: var(--purple); }
+  .map-day-header.d6 { background: #c8a840; }
+  .map-place-card {
+    background: var(--white); border: 1px solid var(--border); border-radius: 12px;
+    padding: 12px 14px; margin-bottom: 8px; display: flex; align-items: center;
+    justify-content: space-between; gap: 10px; box-shadow: 0 1px 5px rgba(0,0,0,0.04);
+  }
+  .map-place-info { flex: 1; }
+  .map-place-name { font-size: 13px; font-weight: 700; color: var(--text); }
+  .map-place-type { font-size: 10px; color: var(--text-light); margin-top: 2px; }
+
+  .shop-building {
+    background: var(--white); border: 1px solid var(--border); border-radius: 14px;
+    margin-bottom: 14px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+  .shop-building-header {
+    padding: 12px 14px; font-size: 15px; font-weight: 700; color: var(--white);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .shop-building-header.links { background: linear-gradient(135deg, #d4748a, #c46080); }
+  .shop-building-header.lucua { background: linear-gradient(135deg, #7aaa9a, #5a8a7a); }
+  .shop-building-header.lucua1100 { background: linear-gradient(135deg, #6aaaca, #4a8aaa); }
+  .shop-building-header.hepfive { background: linear-gradient(135deg, #c49040, #a07020); }
+  .shop-building-header.granfront { background: linear-gradient(135deg, #8a7ac4, #6a5aa4); }
+  .shop-building-header.daimaru { background: linear-gradient(135deg, #c07060, #a05040); }
+  .shop-floor { display: flex; padding: 8px 14px; border-top: 1px solid var(--border); align-items: flex-start; gap: 10px; }
+  .floor-label { font-size: 12px; font-weight: 700; color: var(--text-light); min-width: 40px; flex-shrink: 0; padding-top: 1px; }
+  .floor-shops { font-size: 12px; color: var(--text); line-height: 1.5; flex: 1; }
+  .floor-hours { font-size: 10px; color: var(--text-light); flex-shrink: 0; margin-top: 1px; }
+  .shop-highlight { font-weight: 700; color: var(--sakura-deep); }
+
+  .menu-intro {
+    background: linear-gradient(135deg, var(--orange-light), var(--yellow-light));
+    border-radius: 14px; padding: 14px; margin-bottom: 16px; border: 1px solid #e8d8c0;
+  }
+  .menu-intro h2 { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .menu-intro p { font-size: 11px; color: var(--text-light); }
+  .menu-category {
+    background: var(--white); border: 1px solid var(--border); border-radius: 14px;
+    margin-bottom: 12px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+  }
+  .menu-cat-header {
+    padding: 10px 14px; font-size: 13px; font-weight: 700; color: var(--white);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .menu-cat-header.soup { background: linear-gradient(135deg, #e8906a, #c07050); }
+  .menu-cat-header.cold { background: linear-gradient(135deg, #6aaaca, #4a8aaa); }
+  .menu-cat-header.oden { background: linear-gradient(135deg, #8aaa6a, #6a8a4a); }
+  .menu-cat-header.rice { background: linear-gradient(135deg, #c49040, #a07020); }
+  .menu-cat-header.info { background: linear-gradient(135deg, #8a7ac4, #6a5aa4); }
+  .menu-item {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 9px 14px; border-top: 1px solid #f5f0ec; gap: 8px;
+  }
+  .menu-item-jp { font-size: 12px; color: var(--text-light); }
+  .menu-item-zh { font-size: 13px; font-weight: 600; color: var(--text); flex: 1; }
+  .menu-item-price { font-size: 12px; font-weight: 700; color: var(--orange); white-space: nowrap; }
+  .menu-note { font-size: 11px; color: var(--text-light); padding: 8px 14px; border-top: 1px solid #f5f0ec; font-style: italic; }
+
+  .tip-scroll { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 16px; scrollbar-width: none; }
+  .tip-scroll::-webkit-scrollbar { display: none; }
+  .tip-card {
+    flex-shrink: 0; background: var(--white); border: 1px solid var(--border);
+    border-radius: 12px; padding: 10px 14px; font-size: 11px; color: var(--text);
+    min-width: 160px; box-shadow: 0 1px 5px rgba(0,0,0,0.04);
+  }
+  .tip-card strong { display: block; font-size: 12px; color: var(--sakura-deep); margin-bottom: 3px; }
+  .info-banner {
+    background: var(--sakura-light); border: 1px solid var(--sakura); border-radius: 12px;
+    padding: 12px 14px; font-size: 12px; color: var(--text); line-height: 1.6; margin-bottom: 14px;
+  }
+
+  @media (min-width: 480px) { .overview-grid { grid-template-columns: 1fr 1fr 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="app-header">
+  <div class="jp-label">関西旅行 · 2026</div>
+  <h1>🌸 關西之旅</h1>
+  <div class="subtitle">3月29日 ～ 4月3日 · 6天5夜</div>
+  <div class="sakura-deco">🌸 🌸 🌸 🌸 🌸</div>
+</div>
+
+<!-- 總表 -->
+<div id="sec-overview" class="section active">
+  <div class="overview-grid">
+    <div class="day-card" onclick="switchDay(0)">
+      <div class="day-label">DAY 1</div>
+      <div class="day-date">3/29 (日)</div>
+      <div class="day-theme">台灣出發<br>→ 和歌山</div>
+      <div class="day-highlights">
+        <span class="highlight-tag">關西機場</span>
+        <span class="highlight-tag">格蘭比亞酒店</span>
+      </div>
+    </div>
+    <div class="day-card" onclick="switchDay(1)">
+      <div class="day-label">DAY 2</div>
+      <div class="day-date">3/30 (一)</div>
+      <div class="day-theme">和歌山城<br>加太・滿幸</div>
+      <div class="day-highlights">
+        <span class="highlight-tag">和歌山城</span>
+        <span class="highlight-tag">加太</span>
+        <span class="highlight-tag">玉林園</span>
+      </div>
+    </div>
+    <div class="day-card" onclick="switchDay(2)">
+      <div class="day-label">DAY 3</div>
+      <div class="day-date">3/31 (二)</div>
+      <div class="day-theme">和歌山→梅田<br>配眼鏡・購物</div>
+      <div class="day-highlights">
+        <span class="highlight-tag">LINKS梅田</span>
+        <span class="highlight-tag">香川烏龍麵</span>
+        <span class="highlight-tag">DONKI</span>
+      </div>
+    </div>
+    <div class="day-card" onclick="switchDay(3)">
+      <div class="day-label">DAY 4</div>
+      <div class="day-date">4/1 (三)</div>
+      <div class="day-theme">神戶一日<br>動物王國・神戶牛</div>
+      <div class="day-highlights">
+        <span class="highlight-tag">神戶動物王國</span>
+        <span class="highlight-tag">吉祥吉</span>
+        <span class="highlight-tag">神戶港</span>
+      </div>
+    </div>
+    <div class="day-card" onclick="switchDay(4)">
+      <div class="day-label">DAY 5</div>
+      <div class="day-date">4/2 (四)</div>
+      <div class="day-theme">毛馬櫻之宮<br>道頓堀・牛舌檸檬</div>
+      <div class="day-highlights">
+        <span class="highlight-tag">毛馬公園</span>
+        <span class="highlight-tag">道頓堀</span>
+        <span class="highlight-tag">牛舌檸檬</span>
+      </div>
+    </div>
+    <div class="day-card" onclick="switchDay(5)">
+      <div class="day-label">DAY 6</div>
+      <div class="day-date">4/3 (五)</div>
+      <div class="day-theme">HARBS・關大<br>回台灣</div>
+      <div class="day-highlights">
+        <span class="highlight-tag">HARBS</span>
+        <span class="highlight-tag">關西大學</span>
+        <span class="highlight-tag">關西機場</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">✈️ 航班資訊</div>
+  <div class="stay-card" style="background:var(--sky-light); border-color:var(--sky);">
+    <div class="stay-icon">🛫</div>
+    <div class="stay-info">
+      <div class="stay-name">去程：D7378</div>
+      <div class="stay-dates">3/29 桃園 15:40 → 關西 19:30（T1）</div>
+    </div>
+  </div>
+  <div class="stay-card" style="background:var(--sky-light); border-color:var(--sky);">
+    <div class="stay-icon">🛬</div>
+    <div class="stay-info">
+      <div class="stay-name">回程：D7379</div>
+      <div class="stay-dates">4/3 關西 20:55 → 桃園 23:05</div>
+    </div>
+  </div>
+
+  <div class="section-title">🏨 住宿安排</div>
+  <div class="stay-card">
+    <div class="stay-icon">🏯</div>
+    <div class="stay-info">
+      <div class="stay-name">格蘭比亞酒店（JR和歌山站）</div>
+      <div class="stay-dates">3/29 – 3/31 · 2晚</div>
+    </div>
+  </div>
+  <div class="stay-card">
+    <div class="stay-icon">🏩</div>
+    <div class="stay-info">
+      <div class="stay-name">Hotel Hokke Club Osaka（法華俱樂部）</div>
+      <div class="stay-dates">3/31 – 4/3 · 3晚</div>
+    </div>
+  </div>
+
+  <div class="section-title">💡 旅遊提示</div>
+  <div class="tip-scroll">
+    <div class="tip-card"><strong>🚊 交通票券</strong>和歌山↔大阪：JR紀州路快速 ¥1,300 / 特急くろしお ¥3,230</div>
+    <div class="tip-card"><strong>🦘 動物王國</strong>三宮買 Port Liner + 動物園套票 ¥2,200 最划算</div>
+    <div class="tip-card"><strong>🍜 餐廳預約</strong>牛舌檸檬已預約18:30，準時到場！</div>
+    <div class="tip-card"><strong>👓 配眼鏡</strong>LINKS UMEDA：JINS(3F)、眼鏡市場(6F)、OWNDAYS(7F)</div>
+  </div>
+</div>
+
+<!-- 每日行程 -->
+<div id="sec-daily" class="section">
+  <div class="day-selector">
+    <button class="day-tab active" onclick="showDay(0, this)">DAY 1</button>
+    <button class="day-tab" onclick="showDay(1, this)">DAY 2</button>
+    <button class="day-tab" onclick="showDay(2, this)">DAY 3</button>
+    <button class="day-tab" onclick="showDay(3, this)">DAY 4</button>
+    <button class="day-tab" onclick="showDay(4, this)">DAY 5</button>
+    <button class="day-tab" onclick="showDay(5, this)">DAY 6</button>
+  </div>
+  <div id="day-content"></div>
+</div>
+
+<!-- 地圖 -->
+<div id="sec-map" class="section">
+  <div class="map-section-title">📍 景點地圖</div>
+  <div class="map-subtitle">點擊「➤」按鈕直接開啟 Google Maps</div>
+
+  <div class="map-day-group">
+    <div class="map-day-header d1">🌸 DAY 1–2 · 和歌山</div>
+    <div class="map-place-card">
+      <div class="map-place-info"><div class="map-place-name">格蘭比亞酒店</div><div class="map-place-type">🏨 住宿 · JR和歌山站</div></div>
+      <a class="map-btn" href="https://maps.app.goo.gl/4MYXXPeRui39yPpB8" target="_blank">➤</a>
+    </div>
+    <div class="map-place-card">
+      <div class="map-place-info"><div class="map-place-name">和歌山城</div><div class="map-place-type">🏯 景點</div></div>
+      <a class="map-btn" href="https://maps.app.goo.gl/Y5q1qXAyc5sCHf9e9" target="_blank">➤</a>
+    </div>
+    <div class="map-place-card">
+      <div class="map-place-info"><div class="map-place-name">滿幸商店II（加太）</div><div class="map-place-type">🦐 美食</div></div>
+      <a class="map-btn" href="https://maps.app.goo.gl/NTaeJf4SmGAu6Mu18" target="_blank">➤</a>
+    </div>
+    <div class="map-place-card">
+      <div class="map-place-info"><div class="map-place-name">とりそば 嘉人</div><div class="map-place-type">🍜 拉麵</div></div>
+      <a class="map-btn" href="https://maps.app.goo.gl/4q1m3q4zEBfLS9vA6" target="_blank">➤</a>
+    </div>
+    <div class="map-place-card">
+      <div class="map-place-info"><div class="map-place-name">ROCK STAR FARMs</div><div class="map-place-type">🌿 景點 · 和歌山市站</div></div>
+      <a class="map-btn" href="https://maps.app.goo.gl/J6GpPLiStsy7JTow7" target="_blank">➤</a>
+    </div>
+  </div>
+
+  <div class="map-day-group">
+    <div class="map-day-header d3">🛍 DAY 3 · 梅田</div>
+    <div class="map-place-card">
+      <div class="map-place-info"><div class="map-place-name">法華俱樂部（Hotel Hokke Club）</div><div class="map-place-type">🏨 住宿</div></div>
+      <a class="map-btn" href="https://maps.app.goo.gl/TZnT9wqxRU8sR1HM7" target="_blank">➤</a>
+    </div>
+    <div class="map-place-card">
+      <div class="map-place-info"><div class="map-place-name">LINKS UMEDA（配眼鏡）</div><div class="map-place-type">👓 購物</div></div>
+      <a class="map-btn" href="https://maps.app.goo.gl/JLwa1Qw64MbFbcCu5" target="_blank">➤</a>
+    </div>
+    <div class="map-place-card">
+      <div class="map-place-info"><div class="map-place-name">香川 うどん（北新地）</div><div class="map-place-type">🍜 烏龍麵</div></div>
+      <a class="map-btn" href="https://maps.app.goo.gl/Y4jjd3N5mKwRf4gQ7" target="_blank">➤</a>
+    </div>
+    <div class="map-place-card">
+      <div class="map-place-info"><div class="map-place-name">Donki 梅田店</div><div class="map-place-type">🛒 購物</div></div>
+      <a class="map-btn" href="https://maps.app.goo.gl/tCBqD7QyfQGGc8AF9" target="_blank">➤</a>
+    </div>
+    <div class="map-place-card">
+      <div class="map-place-info"><div class="map-place-name">梅田超市</div><div class="map-place-type">🛒 超市</div></div>
+      <a class="map-btn" href="https://maps.app.goo.gl/Mddw4tUExaXZUz5w8" target="_blank">➤</a>
+    </div>
+  </div>
+
+  <div class="map-day-group">
+    <div class="map-day-header d4">🦁 DAY 4 · 神戶</div>
+    <div class="map-place-card">
+      <div class="map-place-info"><div class="map-place-name">神戶動物王國</div><div class="map-place-type">🦘 動物園</div></div>
+      <a class="map-btn" href="https://maps.app.goo.gl/qGhwiyk23Pn6Ppf97" target="_blank">➤</a>
+    </div>
+    <div class="map-place-card">
+      <div class="map-place-info"><div class="map-place-name">吉祥吉 神戶牛</div><div class="map-place-type">🥩 燒肉</div></div>
+      <a class="map-btn" href="https://maps.app.goo.gl/aShQWQ6YHocU7NaNA" target="_blank">➤</a>
+    </div>
+    <div class="map-place-card">
+      <div class="map-place-info"><div class="map-place-name">.donut（神戶甜甜圈）</div><div class="map-place-type">🍩 甜點</div></div>
+      <a class="map-btn" href="https://maps.app.goo.gl/p1nZdYfdK9pNTDpAA" target="_blank">➤</a>
+    </div>
+    <div class="map-place-card">
+      <div class="map-place-info"><div class="map-place-name">神戶港塔</div><div class="map-place-type">🗼 景點</div></div>
+      <a class="map-btn" href="https://maps.app.goo.gl/GpnAHHb3hn4EJD1s7" target="_blank">➤</a>
+    </div>
+    <div class="map-place-card">
+      <div class="map-place-info"><div class="map-place-name">Rojiura 湯咖哩（Grand Front南館7F）</div><div class="map-place-type">🍛 湯咖哩</div></div>
+      <a class="map-btn" href="https://maps.app.goo.gl/eM23RGioAGD6uKSe8" target="_blank">➤</a>
+    </div>
+  </div>
+
+  <div class="map-day-group">
+    <div class="map-day-header d5">🌸 DAY 5 · 道頓堀</div>
+    <div class="map-place-card">
+      <div class="map-place-info"><div class="map-place-name">毛馬櫻之宮公園</div><div class="map-place-type">🌸 賞櫻</div></div>
+      <a class="map-btn" href="https://maps.app.goo.gl/ZyGEdbBibXQZjBpU7" target="_blank">➤</a>
+    </div>
+    <div class="map-place-card">
+      <div class="map-place-info"><div class="map-place-name">道頓堀（BIC CAMERA）</div><div class="map-place-type">🛒 購物景點</div></div>
+      <a class="map-btn" href="https://maps.app.goo.gl/nWYK4FxUgc8oFykq6" target="_blank">➤</a>
+    </div>
+    <div class="map-place-card">
+      <div class="map-place-info"><div class="map-place-name">牛舌檸檬（已預約18:30）</div><div class="map-place-type">⭐ 已預約 · 晚餐</div></div>
+      <a class="map-btn" href="https://maps.app.goo.gl/Yvaw5F4f71Tq8JCT7" target="_blank">➤</a>
+    </div>
+  </div>
+
+  <div class="map-day-group">
+    <div class="map-day-header d6">🎂 DAY 6 · 梅田・關大</div>
+    <div class="map-place-card">
+      <div class="map-place-info"><div class="map-place-name">HARBS（大丸梅田6F）</div><div class="map-place-type">🍰 下午茶 · 11:00–15:00午餐</div></div>
+      <a class="map-btn" href="https://maps.app.goo.gl/P54UV1Td2ddgGyyY7" target="_blank">➤</a>
+    </div>
+    <div class="map-place-card">
+      <div class="map-place-info"><div class="map-place-name">關西大學</div><div class="map-place-type">🏫 景點</div></div>
+      <a class="map-btn" href="https://maps.app.goo.gl/sQyfENBLPKAeeCLv6" target="_blank">➤</a>
+    </div>
+  </div>
+</div>
+
+<!-- 購物樓層 -->
+<div id="sec-shop" class="section">
+  <div class="info-banner">🛍 梅田購物中心樓層指南，點擊門市名稱可參考位置。各棟皆步行可達！</div>
+
+  <div class="shop-building">
+    <div class="shop-building-header links">🏬 LINKS UMEDA</div>
+    <div class="shop-floor"><div class="floor-label">B1</div><div class="floor-shops">りんごのおもい、Harves超市</div></div>
+    <div class="shop-floor"><div class="floor-label">1F</div><div class="floor-shops">UNIQLO、FamilyMart</div><div class="floor-hours">10:00–21:00</div></div>
+    <div class="shop-floor"><div class="floor-label">2F</div><div class="floor-shops">UNIQLO</div></div>
+    <div class="shop-floor"><div class="floor-label">3F</div><div class="floor-shops">GU、<span class="shop-highlight">JINS 👓</span>、earth music&ecology、3COINS</div></div>
+    <div class="shop-floor"><div class="floor-label">4F</div><div class="floor-shops">ABC-MART</div></div>
+    <div class="shop-floor"><div class="floor-label">5F</div><div class="floor-shops">Honeys、DAISO</div></div>
+    <div class="shop-floor"><div class="floor-label">6F</div><div class="floor-shops"><span class="shop-highlight">眼鏡市場 👓</span></div></div>
+    <div class="shop-floor"><div class="floor-label">7F</div><div class="floor-shops"><span class="shop-highlight">OWNDAYS 👓</span></div></div>
+  </div>
+
+  <div class="shop-building">
+    <div class="shop-building-header lucua1100">🏬 LUCUA 1100</div>
+    <div class="shop-floor"><div class="floor-label">B1</div><div class="floor-shops">UNIQLO、GU</div></div>
+    <div class="shop-floor"><div class="floor-label">3F</div><div class="floor-shops">@COSME</div></div>
+    <div class="shop-floor"><div class="floor-label">5F</div><div class="floor-shops"><span class="shop-highlight">JINS 👓</span></div></div>
+  </div>
+
+  <div class="shop-building">
+    <div class="shop-building-header lucua">🏬 LUCUA</div>
+    <div class="shop-floor"><div class="floor-label">B1</div><div class="floor-shops">3COINS、RINGO</div></div>
+    <div class="shop-floor"><div class="floor-label">6F</div><div class="floor-shops">mystic、LORYS FARM</div></div>
+    <div class="shop-floor"><div class="floor-label">8F</div><div class="floor-shops"><span class="shop-highlight">OWNDAYS 👓</span>、MUJI、3COINS</div></div>
+    <div class="shop-floor"><div class="floor-label">9F</div><div class="floor-shops">LOFT</div></div>
+  </div>
+
+  <div class="shop-building">
+    <div class="shop-building-header hepfive">🏬 HEP FIVE</div>
+    <div class="shop-floor"><div class="floor-label">B1</div><div class="floor-shops">RETRO GIRL</div></div>
+    <div class="shop-floor"><div class="floor-label">1F</div><div class="floor-shops">niko and...、clear</div></div>
+    <div class="shop-floor"><div class="floor-label">2F</div><div class="floor-shops">Heather、LOWRYS FARM</div></div>
+    <div class="shop-floor"><div class="floor-label">4F</div><div class="floor-shops">Kastane、Chico、Lattice、INGIN、PLAZA</div></div>
+    <div class="shop-floor"><div class="floor-label">8F</div><div class="floor-shops">BANDAI NAMCO Cross Store 🎮</div></div>
+    <div class="shop-floor"><div class="floor-label">9F</div><div class="floor-shops">Eggnamr、BANDAI NAMCO Cross Store 🎮</div></div>
+  </div>
+
+  <div class="shop-building">
+    <div class="shop-building-header granfront">🏬 Grand Front Osaka</div>
+    <div class="shop-floor"><div class="floor-label">北館 1F</div><div class="floor-shops">TULLY'S COFFEE ☕</div></div>
+    <div class="shop-floor"><div class="floor-label">北館 2–4F</div><div class="floor-shops">MUJI</div></div>
+    <div class="shop-floor"><div class="floor-label">北館 9F</div><div class="floor-shops">TULLY'S COFFEE ☕</div></div>
+    <div class="shop-floor"><div class="floor-label">南館 B1</div><div class="floor-shops">TULLY'S COFFEE ☕</div></div>
+    <div class="shop-floor"><div class="floor-label">南館 2F</div><div class="floor-shops">Qu'il fait bon</div></div>
+    <div class="shop-floor"><div class="floor-label">南館 3F</div><div class="floor-shops">Afternoon Tea TEAROOM</div></div>
+    <div class="shop-floor"><div class="floor-label">南館 7F</div><div class="floor-shops"><span class="shop-highlight">Rojiura 湯咖哩 🍛</span></div></div>
+  </div>
+
+  <div class="shop-building">
+    <div class="shop-building-header daimaru">🏬 大丸梅田店</div>
+    <div class="shop-floor"><div class="floor-label">6F</div><div class="floor-shops"><span class="shop-highlight">HARBS 🍰（午餐套餐 11:00–15:00）</span></div></div>
+  </div>
+</div>
+
+<!-- 菜單 -->
+<div id="sec-menu" class="section">
+  <div class="menu-intro">
+    <h2>🍜 手打うどん 香川</h2>
+    <p>北新地・烏龍麵專門店｜含稅菜單對照翻譯<br>📍 <a href="https://maps.app.goo.gl/Y4jjd3N5mKwRf4gQ7" target="_blank" style="color:var(--orange);">Google Maps 導航</a></p>
+  </div>
+
+  <div class="menu-category">
+    <div class="menu-cat-header soup">🍜 湯麵類（熱麵）</div>
+    <div class="menu-item"><div><div class="menu-item-jp">天カレー</div><div class="menu-item-zh">天婦羅咖哩烏龍</div></div><div class="menu-item-price">¥2,000</div></div>
+    <div class="menu-item"><div><div class="menu-item-jp">カレー</div><div class="menu-item-zh">咖哩烏龍</div></div><div class="menu-item-price">¥1,300</div></div>
+    <div class="menu-item"><div><div class="menu-item-jp">天ぷら</div><div class="menu-item-zh">天婦羅烏龍</div></div><div class="menu-item-price">¥1,800</div></div>
+    <div class="menu-item"><div><div class="menu-item-jp">肉</div><div class="menu-item-zh">肉片烏龍</div></div><div class="menu-item-price">¥1,500</div></div>
+    <div class="menu-item"><div><div class="menu-item-jp">山かけ</div><div class="menu-item-zh">山藥泥烏龍</div></div><div class="menu-item-price">¥1,350</div></div>
+    <div class="menu-item"><div><div class="menu-item-jp">昆布</div><div class="menu-item-zh">海帶昆布烏龍</div></div><div class="menu-item-price">¥1,000</div></div>
+    <div class="menu-item"><div><div class="menu-item-jp">きつね</div><div class="menu-item-zh">甜醬油豆皮烏龍</div></div><div class="menu-item-price">¥1,000</div></div>
+    <div class="menu-item"><div><div class="menu-item-jp">わかめ</div><div class="menu-item-zh">海帶芽烏龍</div></div><div class="menu-item-price">¥1,000</div></div>
+    <div class="menu-item"><div><div class="menu-item-jp">月見</div><div class="menu-item-zh">生蛋烏龍</div></div><div class="menu-item-price">¥1,000</div></div>
+    <div class="menu-item"><div><div class="menu-item-jp">かけ</div><div class="menu-item-zh">清湯烏龍</div></div><div class="menu-item-price">¥850</div></div>
+    <div class="menu-note">⬆ 半份 -¥100 ／ 大碗 +¥200</div>
+  </div>
+
+  <div class="menu-category">
+    <div class="menu-cat-header cold">🧊 冷麵類（冷し）</div>
+    <div class="menu-item"><div><div class="menu-item-jp">天ざる(細)</div><div class="menu-item-zh">天婦羅竹簍冷細麵</div></div><div class="menu-item-price">¥2,000</div></div>
+    <div class="menu-item"><div><div class="menu-item-jp">おろし天ぷら(細)</div><div class="menu-item-zh">蘿蔔泥天婦羅冷細麵</div></div><div class="menu-item-price">¥1,600</div></div>
+    <div class="menu-item"><div><div class="menu-item-jp">冷しきつね(細)</div><div class="menu-item-zh">冷豆皮細麵</div></div><div class="menu-item-price">¥1,400</div></div>
+    <div class="menu-item"><div><div class="menu-item-jp">山かけ（冷）</div><div class="menu-item-zh">山藥泥冷麵</div></div><div class="menu-item-price">¥1,350</div></div>
+    <div class="menu-item"><div><div class="menu-item-jp">おろし</div><div class="menu-item-zh">蘿蔔泥冷麵</div></div><div class="menu-item-price">¥1,150</div></div>
+    <div class="menu-item"><div><div class="menu-item-jp">ざる / 細ざる</div><div class="menu-item-zh">竹簍冷麵 / 細</div></div><div class="menu-item-price">¥1,000</div></div>
+  </div>
+
+  <div class="menu-category">
+    <div class="menu-cat-header oden">🍢 關東煮（おでん）</div>
+    <div class="menu-item"><div><div class="menu-item-jp">すじ</div><div class="menu-item-zh">牛筋</div></div><div class="menu-item-price">¥400</div></div>
+    <div class="menu-item"><div><div class="menu-item-jp">あつあげ</div><div class="menu-item-zh">厚炸豆腐</div></div><div class="menu-item-price">¥300</div></div>
+    <div class="menu-item"><div><div class="menu-item-jp">いとこんにゃく</div><div class="menu-item-zh">蒟蒻絲</div></div><div class="menu-item-price">¥300</div></div>
+    <div class="menu-item"><div><div class="menu-item-jp">ごぼ天</div><div class="menu-item-zh">牛蒡天婦羅</div></div><div class="menu-item-price">¥250</div></div>
+    <div class="menu-item"><div><div class="menu-item-jp">じゃがいも</div><div class="menu-item-zh">馬鈴薯</div></div><div class="menu-item-price">¥250</div></div>
+    <div class="menu-item"><div><div class="menu-item-jp">たまご</div><div class="menu-item-zh">雞蛋</div></div><div class="menu-item-price">¥250</div></div>
+    <div class="menu-item"><div><div class="menu-item-jp">だいこん</div><div class="menu-item-zh">白蘿蔔</div></div><div class="menu-item-price">¥250</div></div>
+    <div class="menu-item"><div><div class="menu-item-jp">こんにゃく</div><div class="menu-item-zh">蒟蒻</div></div><div class="menu-item-price">¥250</div></div>
+    <div class="menu-item"><div><div class="menu-item-jp">ちくわ</div><div class="menu-item-zh">竹輪</div></div><div class="menu-item-price">¥250</div></div>
+    <div class="menu-item"><div><div class="menu-item-jp">とうふ</div><div class="menu-item-zh">豆腐</div></div><div class="menu-item-price">¥250</div></div>
+    <div class="menu-item"><div><div class="menu-item-jp">ひら天</div><div class="menu-item-zh">扁平魚板（黑輪片）</div></div><div class="menu-item-price">¥250</div></div>
+  </div>
+
+  <div class="menu-category">
+    <div class="menu-cat-header rice">🍚 飯類（ご飯もの）</div>
+    <div class="menu-item"><div><div class="menu-item-jp">白飯</div><div class="menu-item-zh">白飯</div></div><div class="menu-item-price">¥300</div></div>
+    <div class="menu-item"><div><div class="menu-item-jp">白飯(小)</div><div class="menu-item-zh">白飯（小）</div></div><div class="menu-item-price">¥200</div></div>
+    <div class="menu-item"><div><div class="menu-item-jp">いなり寿司(2ケ)</div><div class="menu-item-zh">豆皮壽司 2個</div></div><div class="menu-item-price">¥300</div></div>
+    <div class="menu-item"><div><div class="menu-item-jp">おにぎり(1ケ)</div><div class="menu-item-zh">飯糰 1個</div></div><div class="menu-item-price">¥300</div></div>
+  </div>
+
+  <div class="menu-category">
+    <div class="menu-cat-header info">ℹ️ 店家資訊</div>
+    <div class="shop-floor" style="border:none; padding:12px 14px;">
+      <div class="floor-shops" style="font-size:12px; line-height:1.8; color:var(--text);">
+        📦 <strong>提供外帶服務</strong><br>
+        🛵 外送接單：下午 <strong>18:30 ～ 凌晨 3:30</strong><br>
+        🚫 公休日：<strong>星期日</strong> 與 <strong>國定假日</strong><br>
+        ⏰ 店內營業：<strong>18:00 ～ 02:30</strong><br><br>
+        💬 Tully's 點餐小抄：<br>
+        <em>ロイヤルミルクティー氷少なめで、ミルクを足してください</em><br>
+        （皇家奶茶少冰，請多加一些牛奶）
+      </div>
+    </div>
+  </div>
+</div>
+
+<nav class="bottom-nav">
+  <button class="nav-btn active" onclick="switchSection('overview', this)">
+    <span class="nav-icon">📋</span>總表
+  </button>
+  <button class="nav-btn" onclick="switchSection('daily', this)">
+    <span class="nav-icon">🗓</span>每日行程
+  </button>
+  <button class="nav-btn" onclick="switchSection('map', this)">
+    <span class="nav-icon">📍</span>地圖
+  </button>
+  <button class="nav-btn" onclick="switchSection('shop', this)">
+    <span class="nav-icon">🛍</span>購物樓層
+  </button>
+  <button class="nav-btn" onclick="switchSection('menu', this)">
+    <span class="nav-icon">🍜</span>菜單
+  </button>
+</nav>
+
+<script>
+const days = [
+  {
+    label: "DAY 1 · 3/29 (日) 台灣出發 → 和歌山",
+    items: [
+      { time:"11:45", type:"交通", name:"桃園機場", note:"11:45 搭捷運至桃園機場，13:00 到 T1 報到" },
+      { time:"15:40", type:"交通", name:"關西機場", note:"亞航 D7378 · T1 出發 → T1 抵達 19:30" },
+      { time:"20:32", type:"交通", name:"前往和歌山站", note:"T1 → 2樓（JR關空快速）5-8車廂 → 日根野 →（紀州路快速）→ 和歌山\n① 20:32→20:42→21:12  ② 21:00→21:10→21:41  ③ 21:16→21:28→22:00" },
+      { time:"21:00", type:"住宿", name:"格蘭比亞酒店 入住", note:"JR和歌山站直結", map:"https://maps.app.goo.gl/4MYXXPeRui39yPpB8" },
+      { time:"夜間", type:"購物", name:"超市採購", note:"入住後可至超市採購宵夜" },
+    ]
+  },
+  {
+    label: "DAY 2 · 3/30 (一) 和歌山城・加太",
+    items: [
+      { time:"10:30", type:"食物", name:"和歌山站集合", note:"出發前先在車站集合" },
+      { time:"11:00", type:"景點", name:"和歌山城", note:"攻打和歌山城！", map:"https://maps.app.goo.gl/Y5q1qXAyc5sCHf9e9" },
+      { time:"12:30", type:"景點", name:"加太", note:"前往加太海邊散步" },
+      { time:"午餐", type:"食物", name:"滿幸商店II", note:"加太的超人氣海鮮定食", map:"https://maps.app.goo.gl/NTaeJf4SmGAu6Mu18" },
+      { time:"下午", type:"景點", name:"玉林園", note:"和歌山名物，必吃！" },
+      { time:"18:00", type:"食物", name:"とりそば 嘉人", note:"和歌山拉麵名店", map:"https://maps.app.goo.gl/4q1m3q4zEBfLS9vA6" },
+      { time:"19:30", type:"景點", name:"ROCK STAR FARMs", note:"和歌山市站 · 營業至 21:00", map:"https://maps.app.goo.gl/J6GpPLiStsy7JTow7" },
+    ]
+  },
+  {
+    label: "DAY 3 · 3/31 (二) 和歌山 → 梅田",
+    items: [
+      { time:"08:00", type:"住宿", name:"退房", note:"11點前退房，預計 7:00 起床，8:00 出門" },
+      { time:"08:30", type:"交通", name:"前往梅田", note:"JR阪和線＋大阪環狀線\n和歌山→大阪 1.5h ¥1,300（紀州路快速）\n或特急くろしお 1h ¥3,230\n① 08:30→09:59  ② 08:45→10:15  ③ 09:00→10:28" },
+      { time:"10:30", type:"住宿", name:"法華俱樂部 寄放行李", note:"3點可正式入住・先寄放行李", map:"https://maps.app.goo.gl/TZnT9wqxRU8sR1HM7" },
+      { time:"11:00", type:"景點", name:"LINKS UMEDA 配眼鏡", note:"JINS (3F) · 眼鏡市場 (6F) · OWNDAYS (7F)", map:"https://maps.app.goo.gl/JLwa1Qw64MbFbcCu5" },
+      { time:"下午", type:"食物", name:"Tully's Coffee", note:"ロイヤルミルクティー氷少なめで、ミルクを足してください（皇家奶茶少冰多牛奶）" },
+      { time:"下午", type:"購物", name:"梅田逛街", note:"LINKS / LUCUA / LUCUA1100\n（UNIQLO、GU、3COINS、LOFT）" },
+      { time:"晚餐", type:"食物", name:"香川 うどん", note:"北新地烏龍麵・天婦羅¥1,800 / 肉片¥1,500 / 昆布¥1,000 / 白蘿蔔¥250 / 牛筋¥400", map:"https://maps.app.goo.gl/Y4jjd3N5mKwRf4gQ7" },
+      { time:"宵夜後", type:"購物", name:"Donki 梅田店", note:"藥妝、零食、伴手禮", map:"https://maps.app.goo.gl/tCBqD7QyfQGGc8AF9" },
+    ]
+  },
+  {
+    label: "DAY 4 · 4/1 (三) 神戶一日遊",
+    items: [
+      { time:"09:00", type:"交通", name:"神戶三宮", note:"阪急神戶線特急 約30分\nJR大阪站 → 新快速（神戶・姬路方面）→ 三宮\n① 09:00  ② 09:15  ③ 09:30" },
+      { time:"09:30", type:"交通", name:"前往動物王國", note:"在三宮車站購買「Port Liner + 動物園套票」¥2,200\nPort Liner 約10分" },
+      { time:"10:00", type:"景點", name:"神戶動物王國", note:"超近距離接觸動物！", map:"https://maps.app.goo.gl/qGhwiyk23Pn6Ppf97" },
+      { time:"13:30", type:"交通", name:"回三宮", note:"Port Liner 回三宮" },
+      { time:"14:00", type:"食物", name:"吉祥吉 神戶牛", note:"神戶牛燒肉！", map:"https://maps.app.goo.gl/aShQWQ6YHocU7NaNA" },
+      { time:"下午", type:"食物", name:".donut", note:"阪急神戶三宮站西口 KOBE new WORLD 1F · 11:00–21:00", map:"https://maps.app.goo.gl/p1nZdYfdK9pNTDpAA" },
+      { time:"15:30", type:"景點", name:"神戶港", note:"神戶港塔・麵包超人博物館", map:"https://maps.app.goo.gl/GpnAHHb3hn4EJD1s7" },
+      { time:"19:30", type:"交通", name:"返回梅田", note:"JR三ノ宮→新快速→大阪\n① 19:05  ② 19:20  ③ 19:35" },
+      { time:"20:30", type:"食物", name:"Rojiura 湯咖哩", note:"Grand Front Osaka 南館 7F", map:"https://maps.app.goo.gl/eM23RGioAGD6uKSe8" },
+    ]
+  },
+  {
+    label: "DAY 5 · 4/2 (四) 毛馬櫻之宮・道頓堀",
+    items: [
+      { time:"10:00", type:"交通", name:"毛馬櫻之宮公園", note:"JR「桜ノ宮」1站 · 春日賞櫻最佳地點🌸", map:"https://maps.app.goo.gl/ZyGEdbBibXQZjBpU7" },
+      { time:"午後", type:"景點", name:"梅田購物", note:"逛街購物" },
+      { time:"16:30", type:"交通", name:"前往道頓堀", note:"地鐵約10分" },
+      { time:"17:00", type:"景點", name:"道頓堀（BIC CAMERA）", note:"必拍固力果跑步人！", map:"https://maps.app.goo.gl/nWYK4FxUgc8oFykq6" },
+      { time:"18:30", type:"食物", name:"⭐ 牛舌檸檬（已預約）", note:"已預約 18:30，準時到場！", map:"https://maps.app.goo.gl/Yvaw5F4f71Tq8JCT7" },
+    ]
+  },
+  {
+    label: "DAY 6 · 4/3 (五) HARBS・關大・回台灣",
+    items: [
+      { time:"10:00", type:"住宿", name:"退房・行李寄存", note:"10點退房，行李先寄存飯店" },
+      { time:"11:00", type:"食物", name:"HARBS（大丸梅田6F）", note:"午餐套餐 11:00–15:00\n沙拉＋義大利麵/三明治＋飲料＋半塊蛋糕\n菠菜培根／蕃茄海鮮義大利麵", map:"https://maps.app.goo.gl/P54UV1Td2ddgGyyY7" },
+      { time:"12:30", type:"交通", name:"前往關西大學", note:"地鐵御堂筋線「梅田」→「江坂」換乗北大阪急行→「千里中央」約30分\n或：梅田（阪急大阪梅田站）→ 阪急千里線 → 關大前站 約20分", map:"https://maps.app.goo.gl/sQyfENBLPKAeeCLv6" },
+      { time:"13:00", type:"景點", name:"關西大學", note:"關大校園散步" },
+      { time:"15:30", type:"交通", name:"返回梅田", note:"地鐵約30分" },
+      { time:"16:00", type:"住宿", name:"飯店取回行李", note:"" },
+      { time:"16:30", type:"交通", name:"前往關西機場", note:"預留充裕時間" },
+      { time:"20:55", type:"交通", name:"✈️ 回台灣！", note:"關西機場 20:55 → 桃園機場 23:05" },
+    ]
+  }
+];
+
+function renderDay(idx) {
+  const day = days[idx];
+  let html = `<div class="info-banner" style="background:linear-gradient(135deg,#fce8ed,#fdf5f8);">📅 ${day.label}</div><div class="timeline">`;
+  day.items.forEach(item => {
+    html += `<div class="timeline-item type-${item.type}">
+      <div class="item-header">
+        <span class="item-time">${item.time}</span>
+        <span class="item-name">${item.name}</span>
+        <span class="type-badge badge-${item.type}">${item.type}</span>
+      </div>`;
+    if (item.note) html += `<div class="item-note">${item.note}</div>`;
+    if (item.map) html += `<a class="map-btn" href="${item.map}" target="_blank">➤ 導航</a>`;
+    html += `</div>`;
+  });
+  html += `</div>`;
+  document.getElementById('day-content').innerHTML = html;
+}
+
+function showDay(idx, btn) {
+  document.querySelectorAll('.day-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  renderDay(idx);
+}
+
+function switchSection(name, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('sec-' + name).classList.add('active');
+  btn.classList.add('active');
+  if (name === 'daily') renderDay(0);
+}
+
+function switchDay(idx) {
+  const navBtns = document.querySelectorAll('.nav-btn');
+  switchSection('daily', navBtns[1]);
+  setTimeout(() => {
+    const tabs = document.querySelectorAll('.day-tab');
+    tabs.forEach(t => t.classList.remove('active'));
+    tabs[idx].classList.add('active');
+    renderDay(idx);
+  }, 50);
+}
+
+renderDay(0);
+</script>
+</body>
+</html>
