@@ -520,7 +520,7 @@
 
 <!-- 購物樓層 -->
 <div id="sec-shop" class="section">
-  <div class="info-banner">🛍 梅田購物中心樓層指南，點擊門市名稱可參考位置。各棟皆步行可達！</div>
+  <div class="info-banner">🛍 梅田購物中心樓層指南，點擊門市名稱可參考位置。</div>
 
   <div class="shop-building">
     <div class="shop-building-header links">🏬 LINKS UMEDA</div>
@@ -673,7 +673,7 @@ const days = [
       { time:"11:45", type:"交通", name:"桃園機場", note:"11:45 搭捷運至桃園機場，13:00 到 T1 報到" },
       { time:"15:40", type:"交通", name:"關西機場", note:"亞航 D7378 · T1 出發 → T1 抵達 19:30" },
       { time:"20:32", type:"交通", name:"前往和歌山站", note:"T1 → 2樓（JR關空快速）5-8車廂 → 日根野 →（紀州路快速）→ 和歌山\n① 20:32→20:42→21:12  ② 21:00→21:10→21:41  ③ 21:16→21:28→22:00" },
-      { time:"21:00", type:"住宿", name:"格蘭比亞酒店 入住", note:"JR和歌山站直結", map:"https://maps.app.goo.gl/4MYXXPeRui39yPpB8" },
+      { time:"21:00", type:"住宿", name:"格蘭比亞酒店 入住", note:"JR和歌山站", map:"https://maps.app.goo.gl/4MYXXPeRui39yPpB8" },
       { time:"夜間", type:"購物", name:"超市採購", note:"入住後可至超市採購宵夜" },
     ]
   },
@@ -681,10 +681,10 @@ const days = [
     label: "DAY 2 · 3/30 (一) 和歌山城・加太",
     items: [
       { time:"10:30", type:"食物", name:"和歌山站集合", note:"出發前先在車站集合" },
-      { time:"11:00", type:"景點", name:"和歌山城", note:"攻打和歌山城！", map:"https://maps.app.goo.gl/Y5q1qXAyc5sCHf9e9" },
-      { time:"12:30", type:"景點", name:"加太", note:"前往加太海邊散步" },
-      { time:"午餐", type:"食物", name:"滿幸商店II", note:"加太的超人氣海鮮定食", map:"https://maps.app.goo.gl/NTaeJf4SmGAu6Mu18" },
-      { time:"下午", type:"景點", name:"玉林園", note:"和歌山名物，必吃！" },
+      { time:"11:00", type:"景點", name:"和歌山城", note:"看櫻花！", map:"https://maps.app.goo.gl/Y5q1qXAyc5sCHf9e9" },
+      { time:"12:30", type:"景點", name:"加太", note:"前往加太海邊" },
+      { time:"午餐", type:"食物", name:"滿幸商店II", note:"海鮮定食", map:"https://maps.app.goo.gl/NTaeJf4SmGAu6Mu18" },
+      { time:"下午", type:"景點", name:"玉林園", note:"抹茶" },
       { time:"18:00", type:"食物", name:"とりそば 嘉人", note:"和歌山拉麵名店", map:"https://maps.app.goo.gl/4q1m3q4zEBfLS9vA6" },
       { time:"19:30", type:"景點", name:"ROCK STAR FARMs", note:"和歌山市站 · 營業至 21:00", map:"https://maps.app.goo.gl/J6GpPLiStsy7JTow7" },
     ]
@@ -707,9 +707,9 @@ const days = [
     items: [
       { time:"09:00", type:"交通", name:"神戶三宮", note:"阪急神戶線特急 約30分\nJR大阪站 → 新快速（神戶・姬路方面）→ 三宮\n① 09:00  ② 09:15  ③ 09:30" },
       { time:"09:30", type:"交通", name:"前往動物王國", note:"在三宮車站購買「Port Liner + 動物園套票」¥2,200\nPort Liner 約10分" },
-      { time:"10:00", type:"景點", name:"神戶動物王國", note:"超近距離接觸動物！", map:"https://maps.app.goo.gl/qGhwiyk23Pn6Ppf97" },
+      { time:"10:00", type:"景點", name:"神戶動物王國", note:"可摸狗狗", map:"https://maps.app.goo.gl/qGhwiyk23Pn6Ppf97" },
       { time:"13:30", type:"交通", name:"回三宮", note:"Port Liner 回三宮" },
-      { time:"14:00", type:"食物", name:"吉祥吉 神戶牛", note:"神戶牛燒肉！", map:"https://maps.app.goo.gl/aShQWQ6YHocU7NaNA" },
+      { time:"14:00", type:"食物", name:"吉祥吉 神戶牛", note:"神戶牛", map:"https://maps.app.goo.gl/aShQWQ6YHocU7NaNA" },
       { time:"下午", type:"食物", name:".donut", note:"阪急神戶三宮站西口 KOBE new WORLD 1F · 11:00–21:00", map:"https://maps.app.goo.gl/p1nZdYfdK9pNTDpAA" },
       { time:"15:30", type:"景點", name:"神戶港", note:"神戶港塔・麵包超人博物館", map:"https://maps.app.goo.gl/GpnAHHb3hn4EJD1s7" },
       { time:"19:30", type:"交通", name:"返回梅田", note:"JR三ノ宮→新快速→大阪\n① 19:05  ② 19:20  ③ 19:35" },
@@ -719,11 +719,11 @@ const days = [
   {
     label: "DAY 5 · 4/2 (四) 毛馬櫻之宮・道頓堀",
     items: [
-      { time:"10:00", type:"交通", name:"毛馬櫻之宮公園", note:"JR「桜ノ宮」1站 · 春日賞櫻最佳地點🌸", map:"https://maps.app.goo.gl/ZyGEdbBibXQZjBpU7" },
+      { time:"10:00", type:"交通", name:"毛馬櫻之宮公園", note:"JR「桜ノ宮」1站 · 春日賞櫻🌸", map:"https://maps.app.goo.gl/ZyGEdbBibXQZjBpU7" },
       { time:"午後", type:"景點", name:"梅田購物", note:"逛街購物" },
       { time:"16:30", type:"交通", name:"前往道頓堀", note:"地鐵約10分" },
-      { time:"17:00", type:"景點", name:"道頓堀（BIC CAMERA）", note:"必拍固力果跑步人！", map:"https://maps.app.goo.gl/nWYK4FxUgc8oFykq6" },
-      { time:"18:30", type:"食物", name:"⭐ 牛舌檸檬（已預約）", note:"已預約 18:30，準時到場！", map:"https://maps.app.goo.gl/Yvaw5F4f71Tq8JCT7" },
+      { time:"17:00", type:"景點", name:"道頓堀（BIC CAMERA）", note:"記得拍跟帥哥喝酒", map:"https://maps.app.goo.gl/nWYK4FxUgc8oFykq6" },
+      { time:"18:30", type:"食物", name:"⭐ 牛舌檸檬（已預約）", note:"已預約 18:30", map:"https://maps.app.goo.gl/Yvaw5F4f71Tq8JCT7" },
     ]
   },
   {
@@ -732,10 +732,10 @@ const days = [
       { time:"10:00", type:"住宿", name:"退房・行李寄存", note:"10點退房，行李先寄存飯店" },
       { time:"11:00", type:"食物", name:"HARBS（大丸梅田6F）", note:"午餐套餐 11:00–15:00\n沙拉＋義大利麵/三明治＋飲料＋半塊蛋糕\n菠菜培根／蕃茄海鮮義大利麵", map:"https://maps.app.goo.gl/P54UV1Td2ddgGyyY7" },
       { time:"12:30", type:"交通", name:"前往關西大學", note:"地鐵御堂筋線「梅田」→「江坂」換乗北大阪急行→「千里中央」約30分\n或：梅田（阪急大阪梅田站）→ 阪急千里線 → 關大前站 約20分", map:"https://maps.app.goo.gl/sQyfENBLPKAeeCLv6" },
-      { time:"13:00", type:"景點", name:"關西大學", note:"關大校園散步" },
+      { time:"13:00", type:"景點", name:"關西大學", note:"校園散步" },
       { time:"15:30", type:"交通", name:"返回梅田", note:"地鐵約30分" },
       { time:"16:00", type:"住宿", name:"飯店取回行李", note:"" },
-      { time:"16:30", type:"交通", name:"前往關西機場", note:"預留充裕時間" },
+      { time:"16:30", type:"交通", name:"前往關西機場", note:"機場接送約1.5小時 },
       { time:"20:55", type:"交通", name:"✈️ 回台灣！", note:"關西機場 20:55 → 桃園機場 23:05" },
     ]
   }
